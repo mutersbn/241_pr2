@@ -7,7 +7,7 @@
  */
 
 void RemoveDuplicates();
-void GetFile();
+void GetFile(char * fileName);
 void InitializeEncryptArray();
 void InitializeDecryptArray();
 void ProcessInput(int direction);
