@@ -10,24 +10,22 @@ int main(int argc, char * argv[])
 	char * nameOutFile = argv[4];
 
 	int sizeOfKey = strlen(wordKey);
+	int sizeOfFile = SizeOfFile(nameInFile);
 
-	/* printf("This is what I read from the buffer:\n");
-	printf("%s %s %s %s\n", cryptionDirection, wordKey,
-			nameInFile, nameOutFile);
-*/
-	//printf("Trying to access file...\n");
-	//GetFile("THE_VOICE.txt");
-	
-	RemoveDuplicates(wordKey, sizeOfKey);
+	char * KEY = RemoveDuplicates(wordKey, sizeOfKey);
+	char * fileContents = GetFile(nameInFile);
 	
 	if(*cryptionDirection == 'e')
 	{
 		/* Encrypt. */
+		Encrypt(KEY, fileContents, sizeOfFile);
 	}
 	else
 	{
 		/* Decrypt. */
 	}
+	
+	
 
 	return 0;
 }

@@ -24,36 +24,49 @@ void prepend(char * s, char * t)
 }
 
 /*
+ * Description: Reverses order of array
+ */
+void reverse(char * array, int sizeOfArray)
+{
+	for(int low = 0, high = sizeOfArray - 1; low < high; low++, high--)
+	{
+		char temp = array[low];
+		array[low] = array[high];
+		array[high] = temp;
+	}
+}
+
+/*
  * Function: RemoveDuplicates()
  * Arguments: 
  * Return Type:
  * Description:
  */
-void RemoveDuplicates(char * key, int sizeOfKey)
+char * RemoveDuplicates(char * key, int sizeOfKey)
 {
 	const int SUPER_ALPHA_LENGTH = 27;
+
+	printf("sizeOfKey: %d\n", sizeOfKey);
 	
 	int superAlphaExtendedLength = (sizeOfKey + SUPER_ALPHA_LENGTH);
 	int count = 0;
 
-	char superAlpha[] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-		'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y',
-		'Z', '\0' };
+	char superAlpha[] = { 'Z', 'Y', 'X', 'W', 'V', 'U', 'T', 'S', 'R', 'Q',
+		'P', 'O', 'N', 'M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D', 'C',
+		'B', 'A', '\0' };
 	char * superAlphaExt = (char*)malloc(superAlphaExtendedLength * sizeof(char));
 
 	prepend(superAlphaExt, superAlpha);
 	prepend(superAlphaExt, key);
 
-	printf("This is what's inside the extended array: %s\n", superAlphaExt);
-
-	//printf("Capitalizing all characters and removing duplicate chars...\n");
+	//printf("This is what's inside the extended array: %s\n", superAlphaExt);
 	
 	/*
 	 * Lvl 1: Loop through each character in the array
 	 * Lvl 2: Compare character 'i' with each successive character
 	 * Lvl 3: Make duplicates spaces
 	 */
-	for(int i=0; i<superAlphaExtendedLength-1; i++)
+	for(int i=0; i<superAlphaExtendedLength; i++)
 	{
 		if(superAlphaExt[i] >= 'a' && superAlphaExt[i] <= 'z')
 		{
@@ -77,8 +90,9 @@ void RemoveDuplicates(char * key, int sizeOfKey)
 	superAlphaExt = (char*)realloc(superAlphaExt,
 			(superAlphaExtendedLength - count)*sizeof(char*));
 
-	printf("\nAfter capitalizing all characters and removing duplicates, the string is now %s\n",
-			superAlphaExt);
+	printf("\nThe Key is: %s\n", superAlphaExt);
+
+	return superAlphaExt;
 }
 
 /*
@@ -89,47 +103,75 @@ void RemoveDuplicates(char * key, int sizeOfKey)
  * array.
  */
 
-void GetFile(char * fileName)
+char * GetFile(char * fileName)
 {
 	FILE * inFile;
-	int sizeOfFile;
-	char * decryptedArray;
-	printf("Attempting to open the file...\n");
-	inFile = fopen("THE_VOICE.txt", "r");
-
-	fseek(inFile, 0, SEEK_END);
-	sizeOfFile = ftell(inFile);
-	rewind(inFile);
-	printf("After opening the file, I've determined its length\nto be: %d\n",
-			sizeOfFile);
+	int sizeOfFile = SizeOfFile(fileName);
+	char * fileArray;
+	//printf("Attempting to open the file...\n");
+	inFile = fopen(fileName, "r");
 	
-	printf("Allocating %d bytes of space...\n", sizeOfFile);
-	decryptedArray = (char*)malloc((sizeOfFile + 1) * sizeof(char));
+	//printf("Allocating %d bytes of space...\n", sizeOfFile);
+	fileArray = (char*)malloc((sizeOfFile + 1) * sizeof(char));
 
-	if(decryptedArray == NULL)
+	if(fileArray == NULL)
 	{
 		printf("Memory not allocated.");
 		exit(0);
 	}
 
-	printf("Reading file data into an array...\n");
-	fread(decryptedArray, sizeOfFile, 1, inFile);
-	decryptedArray[sizeOfFile] = '\0';
-	printf("This is the content of the file:\n\n");
-	printf("%s\n", decryptedArray);
+	//printf("Reading file data into an array...\n");
+	fread(fileArray, sizeOfFile, 1, inFile);
+	fileArray[sizeOfFile] = '\0';
+
+	/* printf("This is the content of the file:\n\n");
+	printf("%s\n", decryptedArray); */
+
+	return fileArray;
 }
 
-void InitializeEncryptArray()
+int SizeOfFile(char * nameInFile)
 {
-
+	int size;
+	FILE * file;
+	file = fopen(nameInFile, "r");
+	fseek(file, 0, SEEK_END);
+	size = ftell(file);
+	rewind(file);
+	printf("After opening the file, I've determined its length\nto be: %d\n",
+			size);
+	return size;
 }
 
-void InitializeDecryptArray()
+char * Encrypt(char * KEY, char * fileContents, int size)
 {
+	char * output;
 
+	printf("Size: %d\n", size);
+
+	output = (char*)malloc(size * sizeof(char));
+
+	printf("%s\n", fileContents);
+
+	for(int i=0; i<size; i++)
+	{
+		if(KEY[fileContents[i] - 'A'] >= 'A' && KEY[fileContents[i] - 'A'] <=
+				'Z')
+		{
+			output[i] = KEY[fileContents[i] - 'A'];
+		}
+		else
+		{
+			output[i] = fileContents[i];
+		}
+	}
+
+	printf("The output is: \n\n%s\n\n", output);
+
+	return output;
 }
 
-void ProcessInput(int direction)
+char * Decrypt(char * KEY, char * fileContents, int size)
 {
 
 }

@@ -6,8 +6,10 @@
  * substitution cipher.
  */
 
-void RemoveDuplicates();
-void GetFile(char * fileName);
-void InitializeEncryptArray();
-void InitializeDecryptArray();
-void ProcessInput(int direction);
+void prepend(char * s, char * t);
+void reverse(char * array, int sizeOfArray);
+char * RemoveDuplicates(char * key, int sizeOfKey);
+char * GetFile(char * fileName);
+int SizeOfFile(char * nameInFile);
+char * Encrypt(char * KEY, char * fileContents, int size);
+char * Decrypt(char * KEY, char * fileContents, int size);
