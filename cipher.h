@@ -10,6 +10,7 @@ void prepend(char * s, char * t);
 void reverse(char * array, int sizeOfArray);
 char * RemoveDuplicates(char * key, int sizeOfKey);
 char * GetFile(char * fileName);
-int SizeOfFile(char * nameInFile);
+int SizeOfFile(char * fileName);
 char * Encrypt(char * KEY, char * fileContents, int size);
 char * Decrypt(char * KEY, char * fileContents, int size);
+void PublishToFile(char * fileContents, char * fileName, int size);

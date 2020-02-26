@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "cipher.h"
 
 int main(int argc, char * argv[])
@@ -18,9 +19,13 @@ int main(int argc, char * argv[])
 	if(*cryptionDirection == 'e')
 	{
 		/* Encrypt. */
-		Encrypt(KEY, fileContents, sizeOfFile);
+		char * encryptedFileContents = Encrypt(KEY, fileContents, sizeOfFile);
+		PublishToFile(encryptedFileContents, nameOutFile, sizeOfFile);
+		free(fileContents);
+		free(KEY);
+		free(encryptedFileContents);
 	}
-	else
+	else if(*cryptionDirection == 'd')
 	{
 		/* Decrypt. */
 	}

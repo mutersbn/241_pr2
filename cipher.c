@@ -11,60 +11,57 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 #include "cipher.h"
 
 /*
+ * Function: Prepend()
+ * Arguments: 2 pointers to arrays of characters
+ * Return Type: void
  * Description: Prepends t into s
  */
 void prepend(char * s, char * t)
 {
-	size_t lengthT = strlen(t);
+	int lengthT = strlen(t);
 	memmove(s + lengthT, s, strlen(s) + 1);
 	memcpy(s, t, lengthT);
 }
 
 /*
- * Description: Reverses order of array
- */
-void reverse(char * array, int sizeOfArray)
-{
-	for(int low = 0, high = sizeOfArray - 1; low < high; low++, high--)
-	{
-		char temp = array[low];
-		array[low] = array[high];
-		array[high] = temp;
-	}
-}
-
-/*
  * Function: RemoveDuplicates()
- * Arguments: 
- * Return Type:
- * Description:
+ * Arguments: pointer to character array, int size of that array
+ * Return Type: pointer to character array
+ * Description: Takes our keyword and creates an array KEY
  */
-char * RemoveDuplicates(char * key, int sizeOfKey)
+char * RemoveDuplicates(char * keyWord, int sizeOfKey)
 {
 	const int SUPER_ALPHA_LENGTH = 27;
-
-	printf("sizeOfKey: %d\n", sizeOfKey);
 	
+	printf("sizeOfKey: %d\n", sizeOfKey);
+	printf("SUPER_ALPHA_LENGTH: %d\n", SUPER_ALPHA_LENGTH);
+
 	int superAlphaExtendedLength = (sizeOfKey + SUPER_ALPHA_LENGTH);
-	int count = 0;
+	printf("superAlphaExtendedLength: %d\n", superAlphaExtendedLength);
 
 	char superAlpha[] = { 'Z', 'Y', 'X', 'W', 'V', 'U', 'T', 'S', 'R', 'Q',
 		'P', 'O', 'N', 'M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D', 'C',
 		'B', 'A', '\0' };
-	char * superAlphaExt = (char*)malloc(superAlphaExtendedLength * sizeof(char));
+	char * superAlphaExt = (char*)malloc(superAlphaExtendedLength *
+			sizeof(char*));
+	char * KEY = (char*)malloc(SUPER_ALPHA_LENGTH * sizeof(char*));
 
 	prepend(superAlphaExt, superAlpha);
-	prepend(superAlphaExt, key);
+	prepend(superAlphaExt, keyWord);
 
-	//printf("This is what's inside the extended array: %s\n", superAlphaExt);
+	superAlphaExt[superAlphaExtendedLength - 1] = '\0';
+
+	printf("This is what's inside the stdArray: %s\n", superAlpha);
+	printf("This is what's inside the extended array: %s\n", superAlphaExt);
 	
 	/*
 	 * Lvl 1: Loop through each character in the array
 	 * Lvl 2: Compare character 'i' with each successive character
-	 * Lvl 3: Make duplicates spaces
+	 * Lvl 3: Shift each character left one space
 	 */
 	for(int i=0; i<superAlphaExtendedLength; i++)
 	{
@@ -77,7 +74,6 @@ char * RemoveDuplicates(char * key, int sizeOfKey)
 		{
 			if(toupper(superAlphaExt[i]) == toupper(superAlphaExt[k]))
 			{
-				count++;
 				for(int n=k; n<superAlphaExtendedLength; n++)
 				{
 					superAlphaExt[n] = superAlphaExt[n+1];
@@ -86,18 +82,22 @@ char * RemoveDuplicates(char * key, int sizeOfKey)
 		}
 	}
 
-	// Reallocate memory so we aren't taking up more space than we should be.
-	superAlphaExt = (char*)realloc(superAlphaExt,
-			(superAlphaExtendedLength - count)*sizeof(char*));
+	// Copy everything over to the KEY array
+	for(int n=0; n<SUPER_ALPHA_LENGTH; n++)
+	{
+		KEY[n] = superAlphaExt[n];
+	}
 
-	printf("\nThe Key is: %s\n", superAlphaExt);
+	free(superAlphaExt);
 
-	return superAlphaExt;
+	printf("\nThe Key is: %s\n", KEY);
+
+	return KEY;
 }
 
 /*
  * Function: GetFile()
- * Arguments: FILE * inFile
+ * Arguments: pointer to character array that holds our fileName
  * Return Type: void
  * Description: Open the file and read the contents of it into a character
  * array.
@@ -110,44 +110,59 @@ char * GetFile(char * fileName)
 	char * fileArray;
 	//printf("Attempting to open the file...\n");
 	inFile = fopen(fileName, "r");
-	
-	//printf("Allocating %d bytes of space...\n", sizeOfFile);
-	fileArray = (char*)malloc((sizeOfFile + 1) * sizeof(char));
 
-	if(fileArray == NULL)
-	{
-		printf("Memory not allocated.");
-		exit(0);
+	if(access(fileName, F_OK ) != -1)
+	{	
+		//printf("Allocating %d bytes of space...\n", sizeOfFile);
+		fileArray = (char*)malloc((sizeOfFile + 1) * sizeof(char));
+
+		if(fileArray == NULL)
+		{
+			printf("Memory not allocated.");
+			exit(0);
+		}
+
+		//printf("Reading file data into an array...\n");
+		fread(fileArray, sizeOfFile, 1, inFile);
+		fileArray[sizeOfFile] = '\0';
+		fclose(inFile);
 	}
-
-	//printf("Reading file data into an array...\n");
-	fread(fileArray, sizeOfFile, 1, inFile);
-	fileArray[sizeOfFile] = '\0';
-
-	/* printf("This is the content of the file:\n\n");
-	printf("%s\n", decryptedArray); */
-
 	return fileArray;
 }
 
-int SizeOfFile(char * nameInFile)
+/*
+ * Function: SizeOfFile()
+ * Arguments: pointer to character array that holds our fileName
+ * Return Type: int
+ * Description: Simply returns the size of the file
+ */
+int SizeOfFile(char * fileName)
 {
-	int size;
+	int size = 0;
 	FILE * file;
-	file = fopen(nameInFile, "r");
-	fseek(file, 0, SEEK_END);
-	size = ftell(file);
-	rewind(file);
-	printf("After opening the file, I've determined its length\nto be: %d\n",
-			size);
+	file = fopen(fileName, "r");
+	if(file != NULL)
+	{
+		fseek(file, 0, SEEK_END);
+		size = ftell(file);
+		rewind(file);
+		printf("After opening the file, I've determined its length to be:"
+				"%d\n\n", size);
+		fclose(file);
+	}
 	return size;
 }
 
+/*
+ * Function: Encrypt()
+ * Arguments: pointer to KEY character array, pointer to a character array of 
+ * 	the contents of the file, and the size of the file
+ * Return Type: pointer to a character array
+ * Description: Encrypts the file using the KEY
+ */
 char * Encrypt(char * KEY, char * fileContents, int size)
 {
 	char * output;
-
-	printf("Size: %d\n", size);
 
 	output = (char*)malloc(size * sizeof(char));
 
@@ -155,15 +170,20 @@ char * Encrypt(char * KEY, char * fileContents, int size)
 
 	for(int i=0; i<size; i++)
 	{
+		// If our encrypted character is A - Z, use it.
 		if(KEY[fileContents[i] - 'A'] >= 'A' && KEY[fileContents[i] - 'A'] <=
 				'Z')
 		{
 			output[i] = KEY[fileContents[i] - 'A'];
 		}
+		// Otherwise, don't encrypt the character and place it directly into
+		// the character array 'output[]'
 		else
 		{
+			//printf("%c", fileContents[i]);
 			output[i] = fileContents[i];
 		}
+		printf("%c", fileContents[i]);
 	}
 
 	printf("The output is: \n\n%s\n\n", output);
@@ -172,6 +192,11 @@ char * Encrypt(char * KEY, char * fileContents, int size)
 }
 
 char * Decrypt(char * KEY, char * fileContents, int size)
+{
+
+}
+
+void PublishToFile(char * fileContents, char * fileName, int size)
 {
 
 }
