@@ -23,14 +23,19 @@ int main(int argc, char * argv[])
 		PublishToFile(encryptedFileContents, nameOutFile, sizeOfFile);
 		free(fileContents);
 		free(KEY);
-		free(encryptedFileContents);
+		//free(encryptedFileContents);
 	}
 	else if(*cryptionDirection == 'd')
 	{
 		/* Decrypt. */
+		/*
+		char * decryptedFileContents = Decrypt(KEY, fileContents, sizeOfFile);
+		PublishToFile(decryptedFileContents, nameOutFile, sizeOfFile);
+		free(fileContents);
+		free(KEY);
+		free(decryptedFileContents);
+		*/
 	}
 	
-	
-
 	return 0;
 }

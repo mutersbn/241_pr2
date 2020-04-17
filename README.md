@@ -32,3 +32,8 @@ Other Information:
 	I will be using the poem "THE VOICE" by Shel Silverstein as my input text
 	file. It is very short, but has a great, wholesome message about his belief
 	of the good inside every person.
+
+	To run this program using the "cipher" executable file, type the following
+	command:
+		
+		cipher [e/d] [KEYWORD] [INPUT_FILE] [OUTPUT_FILE]

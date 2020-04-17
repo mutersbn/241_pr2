@@ -35,28 +35,22 @@ void prepend(char * s, char * t)
  */
 char * RemoveDuplicates(char * keyWord, int sizeOfKey)
 {
-	const int SUPER_ALPHA_LENGTH = 27;
-	
-	printf("sizeOfKey: %d\n", sizeOfKey);
-	printf("SUPER_ALPHA_LENGTH: %d\n", SUPER_ALPHA_LENGTH);
+	const int SUPER_ALPHA_LENGTH = 27; // 26 letter alphabet + null char
 
 	int superAlphaExtendedLength = (sizeOfKey + SUPER_ALPHA_LENGTH);
-	printf("superAlphaExtendedLength: %d\n", superAlphaExtendedLength);
 
 	char superAlpha[] = { 'Z', 'Y', 'X', 'W', 'V', 'U', 'T', 'S', 'R', 'Q',
 		'P', 'O', 'N', 'M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D', 'C',
 		'B', 'A', '\0' };
-	char * superAlphaExt = (char*)malloc(superAlphaExtendedLength *
-			sizeof(char*));
-	char * KEY = (char*)malloc(SUPER_ALPHA_LENGTH * sizeof(char*));
+	char * superAlphaExt = NULL;
+	superAlphaExt = (char*)malloc(superAlphaExtendedLength * sizeof(char*));
+	char * KEY = NULL;
+	KEY = (char*)malloc(SUPER_ALPHA_LENGTH * sizeof(char*));
 
 	prepend(superAlphaExt, superAlpha);
 	prepend(superAlphaExt, keyWord);
 
 	superAlphaExt[superAlphaExtendedLength - 1] = '\0';
-
-	printf("This is what's inside the stdArray: %s\n", superAlpha);
-	printf("This is what's inside the extended array: %s\n", superAlphaExt);
 	
 	/*
 	 * Lvl 1: Loop through each character in the array
@@ -146,8 +140,6 @@ int SizeOfFile(char * fileName)
 		fseek(file, 0, SEEK_END);
 		size = ftell(file);
 		rewind(file);
-		printf("After opening the file, I've determined its length to be:"
-				"%d\n\n", size);
 		fclose(file);
 	}
 	return size;
@@ -163,40 +155,67 @@ int SizeOfFile(char * fileName)
 char * Encrypt(char * KEY, char * fileContents, int size)
 {
 	char * output;
+	int encryptingLetterIndex;
 
 	output = (char*)malloc(size * sizeof(char));
 
-	printf("%s\n", fileContents);
-
 	for(int i=0; i<size; i++)
 	{
+		encryptingLetterIndex = fileContents[i] - 'A';
+
 		// If our encrypted character is A - Z, use it.
-		if(KEY[fileContents[i] - 'A'] >= 'A' && KEY[fileContents[i] - 'A'] <=
-				'Z')
+		if(encryptingLetterIndex >= 0 && encryptingLetterIndex <= 26)
 		{
-			output[i] = KEY[fileContents[i] - 'A'];
+			output[i] = KEY[encryptingLetterIndex];
 		}
 		// Otherwise, don't encrypt the character and place it directly into
 		// the character array 'output[]'
 		else
 		{
-			//printf("%c", fileContents[i]);
 			output[i] = fileContents[i];
 		}
-		printf("%c", fileContents[i]);
 	}
-
-	printf("The output is: \n\n%s\n\n", output);
 
 	return output;
 }
 
 char * Decrypt(char * KEY, char * fileContents, int size)
 {
+/*	
+	char * output;
+	//int decryptingLetterIndex;
+	//char * plainAlphabet = "abcdefghijklmnopqrstuvwxyz";
 
+	output = (char*)malloc(size * sizeof(char));
+
+	for(int i=0; i<size; i++)
+	{
+		decryptingLetterIndex = fileContents[i] - 'A';
+		printf("%d ", decryptingLetterIndex);
+
+		// If our character is A-Z, use it.
+		if(fileContents[i] >= 'A' && fileContents[i] <= 'Z')
+		{
+			output[i] = plainAlphabet[decryptingLetterIndex];
+		}
+	}
+
+	printf("\nOutput is:\n\n%s\n", output);
+
+
+	return output;
+	*/
 }
 
 void PublishToFile(char * fileContents, char * fileName, int size)
 {
+	FILE * outputFile;
+	outputFile = fopen(fileName, "w");
 
+	for(int i=0; i<size; i++)
+	{
+		fputc(fileContents[i], outputFile);
+	}
+
+	fclose(outputFile);
 }
