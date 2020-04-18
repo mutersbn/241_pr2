@@ -35,7 +35,7 @@ void prepend(char * s, const char * t)
  */
 char * StandardizeKEY(char * keyWord, int sizeOfKey)
 {
-	const int SUPER_ALPHA_LENGTH = 27; // 26 letter alphabet + null char
+	const int SUPER_ALPHA_LENGTH = 26; // 26 letter alphabet + null char
 
 	// 'apk' = 'Alpha Plus (+) Key'
 	int apkLength = (sizeOfKey + SUPER_ALPHA_LENGTH);
@@ -188,12 +188,19 @@ char * Decrypt(char * KEY, char * fileContents, int size)
 
 	for(int i=0; i<size; i++)
 	{
-		decryptingLetterIndex = KEY[i] - 'A';
+		decryptingLetterIndex = fileContents[i] - 'A'; // Retrieve the character to be decrypted
 
-		// If our encrypted character is A - Z, use it.
+		// If this character is A - Z, decrypt it using our KEY
 		if(decryptingLetterIndex >= 0 && decryptingLetterIndex <= 26)
 		{
-			output[i] = Alphabet[decryptingLetterIndex];
+			for(int k=0; k<26; k++)
+			{
+				if(Alphabet[decryptingLetterIndex] == KEY[k])
+				{
+					output[i] = Alphabet[k];
+				}
+			}
+			//output[i] = Alphabet[decryptingLetterIndex];
 		}
 		// Otherwise, don't encrypt the character and place it directly into
 		// the character array 'output[]'
