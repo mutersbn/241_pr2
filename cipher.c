@@ -180,25 +180,28 @@ char * Encrypt(char * KEY, char * fileContents, int size)
 
 char * Decrypt(char * KEY, char * fileContents, int size)
 {
-
 	char * output;
+	int decryptingLetterIndex;
+	char * Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\0";
 
-	output = (char*)malloc(size * sizeof(char));
+	output = (char*)malloc(size * sizeof(char)); // TODO: FREE 'output'
 
 	for(int i=0; i<size; i++)
 	{
-		decryptingLetterIndex = fileContents[i] - 'A';
-		printf("%d ", decryptingLetterIndex);
+		decryptingLetterIndex = KEY[i] - 'A';
 
-		// If our character is A-Z, use it.
-		if(fileContents[i] >= 'A' && fileContents[i] <= 'Z')
+		// If our encrypted character is A - Z, use it.
+		if(decryptingLetterIndex >= 0 && decryptingLetterIndex <= 26)
 		{
-			output[i] = plainAlphabet[decryptingLetterIndex];
+			output[i] = Alphabet[decryptingLetterIndex];
+		}
+		// Otherwise, don't encrypt the character and place it directly into
+		// the character array 'output[]'
+		else
+		{
+			output[i] = fileContents[i];
 		}
 	}
-
-	printf("\nOutput is:\n\n%s\n", output);
-
 
 	return output;
 }
