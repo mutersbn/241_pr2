@@ -22,9 +22,11 @@
  */
 void prepend(char * s, char * t)
 {
-	int lengthT = strlen(t);
-	memmove(s + lengthT, s, strlen(s) + 1);
-	memcpy(s, t, lengthT);
+	if(s && t){
+		int lengthT = strlen(t);
+		memmove(s + lengthT, s, strlen(s) + 1);
+		memcpy(s, t, lengthT);
+	}
 }
 
 /*
@@ -58,18 +60,18 @@ char * StandardizeKEY(char * keyWord, int sizeOfKey)
 	 * Lvl 2: Compare character 'i' with each successive character
 	 * Lvl 3: Shift each character left one space
 	 */
-	for(int i=0; i<apkLength; i++)
+	for(int i=0; i<=apkLength; i++)
 	{
 		if(apkArray[i] >= 'a' && apkArray[i] <= 'z')
 		{
 			apkArray[i] = toupper(apkArray[i]);
 		}
 		
-		for(int k=i+1; k<apkLength; k++)
+		for(int k=i+1; k<=apkLength; k++)
 		{
 			if(toupper(apkArray[i]) == toupper(apkArray[k]))
 			{
-				for(int n=k; n<apkLength; n++)
+				for(int n=k; n<=apkLength; n++)
 				{
 					apkArray[n] = apkArray[n+1];
 				}
