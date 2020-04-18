@@ -6,7 +6,7 @@
  * substitution cipher.
  */
 
-void prepend(char * s, char * t);
+void prepend(char * s, const char * t);
 void reverse(char * array, int sizeOfArray);
 char * StandardizeKEY(char * key, int sizeOfKey);
 char * GetFile(char * fileName);

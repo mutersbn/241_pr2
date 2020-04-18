@@ -20,13 +20,11 @@
  * Return Type: void
  * Description: Prepends t into s
  */
-void prepend(char * s, char * t)
+void prepend(char * s, const char * t)
 {
-	if(s && t){
-		int lengthT = strlen(t);
-		memmove(s + lengthT, s, strlen(s) + 1);
-		memcpy(s, t, lengthT);
-	}
+	size_t lengthT = strlen(t);
+	memmove(s + lengthT, s, strlen(s) + 1);
+	memcpy(s, t, lengthT);
 }
 
 /*
@@ -52,8 +50,6 @@ char * StandardizeKEY(char * keyWord, int sizeOfKey)
 
 	prepend(apkArray, superAlpha);
 	prepend(apkArray, keyWord);
-
-	apkArray[apkLength - 1] = '\0';
 	
 	/*
 	 * Lvl 1: Loop through each character in the array
@@ -184,10 +180,8 @@ char * Encrypt(char * KEY, char * fileContents, int size)
 
 char * Decrypt(char * KEY, char * fileContents, int size)
 {
-/*	
+
 	char * output;
-	//int decryptingLetterIndex;
-	//char * plainAlphabet = "abcdefghijklmnopqrstuvwxyz";
 
 	output = (char*)malloc(size * sizeof(char));
 
@@ -207,7 +201,6 @@ char * Decrypt(char * KEY, char * fileContents, int size)
 
 
 	return output;
-	*/
 }
 
 void PublishToFile(char * fileContents, char * fileName, int size)

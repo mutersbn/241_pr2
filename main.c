@@ -16,27 +16,25 @@ int main(int argc, char * argv[])
 	char * KEY = StandardizeKEY(wordKey, sizeOfKey);
 	char * fileContents = GetFile(nameInFile);
 
-	printf("*cryptionDirection: %s", *cryptionDirection);
+	printf("cryptionDirection: %s\n", cryptionDirection);
 	
-	if(*cryptionDirection == 'e')
+	if(strcmp(argv[1], "e\0") == 0)
 	{
 		/* Encrypt. */
 		char * encryptedFileContents = Encrypt(KEY, fileContents, sizeOfFile);
 		PublishToFile(encryptedFileContents, nameOutFile, sizeOfFile);
 		free(fileContents); // COMPLETED: FREE 'fileContents'
-		free(KEY); // COMPLETED: FREE 'KEY'
+		//free(KEY); // COMPLETED: FREE 'KEY'
 		free(encryptedFileContents); // COMPLETED: FREE 'output'
 	}
-	else if(*cryptionDirection == 'd')
+	else if(strcmp(argv[1], "d\0") == 0)
 	{
 		/* Decrypt. */
-		/*
 		char * decryptedFileContents = Decrypt(KEY, fileContents, sizeOfFile);
 		PublishToFile(decryptedFileContents, nameOutFile, sizeOfFile);
 		free(fileContents);
-		free(KEY);
+		//free(KEY);
 		free(decryptedFileContents);
-		*/
 	}
 	
 	return 0;
