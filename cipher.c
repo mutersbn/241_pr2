@@ -28,49 +28,50 @@ void prepend(char * s, char * t)
 }
 
 /*
- * Function: RemoveDuplicates()
+ * Function: StandardizeKEY()
  * Arguments: pointer to character array, int size of that array
- * Return Type: pointer to character array
+ * Return Type: pointer to character array 'KEY'
  * Description: Takes our keyword and creates an array KEY
  */
-char * RemoveDuplicates(char * keyWord, int sizeOfKey)
+char * StandardizeKEY(char * keyWord, int sizeOfKey)
 {
 	const int SUPER_ALPHA_LENGTH = 27; // 26 letter alphabet + null char
 
-	int superAlphaExtendedLength = (sizeOfKey + SUPER_ALPHA_LENGTH);
+	// 'apk' = 'Alpha Plus (+) Key'
+	int apkLength = (sizeOfKey + SUPER_ALPHA_LENGTH);
 
 	char superAlpha[] = { 'Z', 'Y', 'X', 'W', 'V', 'U', 'T', 'S', 'R', 'Q',
 		'P', 'O', 'N', 'M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D', 'C',
 		'B', 'A', '\0' };
-	char * superAlphaExt = NULL;
-	superAlphaExt = (char*)malloc(superAlphaExtendedLength * sizeof(char*));
+	char * apkArray = NULL;
+	apkArray = (char*)malloc(apkLength * sizeof(char*)); // TODO: FREE THIS ARRAY 'apkArray' (completed)
 	char * KEY = NULL;
-	KEY = (char*)malloc(SUPER_ALPHA_LENGTH * sizeof(char*));
+	KEY = (char*)malloc(SUPER_ALPHA_LENGTH * sizeof(char*)); // TODO: FREE THIS ARRAY 'KEY'
 
-	prepend(superAlphaExt, superAlpha);
-	prepend(superAlphaExt, keyWord);
+	prepend(apkArray, superAlpha);
+	prepend(apkArray, keyWord);
 
-	superAlphaExt[superAlphaExtendedLength - 1] = '\0';
+	apkArray[apkLength - 1] = '\0';
 	
 	/*
 	 * Lvl 1: Loop through each character in the array
 	 * Lvl 2: Compare character 'i' with each successive character
 	 * Lvl 3: Shift each character left one space
 	 */
-	for(int i=0; i<superAlphaExtendedLength; i++)
+	for(int i=0; i<apkLength; i++)
 	{
-		if(superAlphaExt[i] >= 'a' && superAlphaExt[i] <= 'z')
+		if(apkArray[i] >= 'a' && apkArray[i] <= 'z')
 		{
-			superAlphaExt[i] = toupper(superAlphaExt[i]);
+			apkArray[i] = toupper(apkArray[i]);
 		}
 		
-		for(int k=i+1; k<superAlphaExtendedLength; k++)
+		for(int k=i+1; k<apkLength; k++)
 		{
-			if(toupper(superAlphaExt[i]) == toupper(superAlphaExt[k]))
+			if(toupper(apkArray[i]) == toupper(apkArray[k]))
 			{
-				for(int n=k; n<superAlphaExtendedLength; n++)
+				for(int n=k; n<apkLength; n++)
 				{
-					superAlphaExt[n] = superAlphaExt[n+1];
+					apkArray[n] = apkArray[n+1];
 				}
 			}
 		}
@@ -79,10 +80,10 @@ char * RemoveDuplicates(char * keyWord, int sizeOfKey)
 	// Copy everything over to the KEY array
 	for(int n=0; n<SUPER_ALPHA_LENGTH; n++)
 	{
-		KEY[n] = superAlphaExt[n];
+		KEY[n] = apkArray[n];
 	}
 
-	free(superAlphaExt);
+	free(apkArray); // COMPLETED: FREE 'apkArray'
 
 	printf("\nThe Key is: %s\n", KEY);
 
@@ -101,27 +102,27 @@ char * GetFile(char * fileName)
 {
 	FILE * inFile;
 	int sizeOfFile = SizeOfFile(fileName);
-	char * fileArray;
+	char * fileContents;
 	//printf("Attempting to open the file...\n");
 	inFile = fopen(fileName, "r");
 
 	if(access(fileName, F_OK ) != -1)
 	{	
 		//printf("Allocating %d bytes of space...\n", sizeOfFile);
-		fileArray = (char*)malloc((sizeOfFile + 1) * sizeof(char));
+		fileContents = (char*)malloc((sizeOfFile + 1) * sizeof(char)); // TODO: FREE 'fileContents'
 
-		if(fileArray == NULL)
+		if(fileContents == NULL)
 		{
 			printf("Memory not allocated.");
 			exit(0);
 		}
 
 		//printf("Reading file data into an array...\n");
-		fread(fileArray, sizeOfFile, 1, inFile);
-		fileArray[sizeOfFile] = '\0';
+		fread(fileContents, sizeOfFile, 1, inFile);
+		fileContents[sizeOfFile] = '\0';
 		fclose(inFile);
 	}
-	return fileArray;
+	return fileContents;
 }
 
 /*
@@ -157,7 +158,7 @@ char * Encrypt(char * KEY, char * fileContents, int size)
 	char * output;
 	int encryptingLetterIndex;
 
-	output = (char*)malloc(size * sizeof(char));
+	output = (char*)malloc(size * sizeof(char)); // TODO: FREE 'output'
 
 	for(int i=0; i<size; i++)
 	{

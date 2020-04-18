@@ -13,17 +13,19 @@ int main(int argc, char * argv[])
 	int sizeOfKey = strlen(wordKey);
 	int sizeOfFile = SizeOfFile(nameInFile);
 
-	char * KEY = RemoveDuplicates(wordKey, sizeOfKey);
+	char * KEY = StandardizeKEY(wordKey, sizeOfKey);
 	char * fileContents = GetFile(nameInFile);
+
+	printf("*cryptionDirection: %s", *cryptionDirection);
 	
 	if(*cryptionDirection == 'e')
 	{
 		/* Encrypt. */
 		char * encryptedFileContents = Encrypt(KEY, fileContents, sizeOfFile);
 		PublishToFile(encryptedFileContents, nameOutFile, sizeOfFile);
-		free(fileContents);
-		free(KEY);
-		//free(encryptedFileContents);
+		free(fileContents); // COMPLETED: FREE 'fileContents'
+		free(KEY); // COMPLETED: FREE 'KEY'
+		free(encryptedFileContents); // COMPLETED: FREE 'output'
 	}
 	else if(*cryptionDirection == 'd')
 	{

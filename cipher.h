@@ -8,7 +8,7 @@
 
 void prepend(char * s, char * t);
 void reverse(char * array, int sizeOfArray);
-char * RemoveDuplicates(char * key, int sizeOfKey);
+char * StandardizeKEY(char * key, int sizeOfKey);
 char * GetFile(char * fileName);
 int SizeOfFile(char * fileName);
 char * Encrypt(char * KEY, char * fileContents, int size);
